@@ -1,6 +1,9 @@
 # Thoughtful AI Customer Support Agent
 
-A modular customer support chatbot with FastAPI backend and Streamlit frontend.
+It helps users with basic questions by retrieving answers from a hardcoded set of responses, 
+using difflib.SequenceMatcher for approximate text matching.
+
+A modular customer support chatbot with FastAPI backend and clean Streamlit interface allows users to chat with the agent.
 
 ## 🏗️ Architecture
 
@@ -20,8 +23,6 @@ This project uses a **client-server architecture**:
 
 ## 🚀 Quick Start
 
-### Option 1: Run Both Servers (Recommended for Development)
-
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -29,9 +30,10 @@ pip install -r requirements.txt
 # Set your OpenAI API key
 export OPENAI_API_KEY=sk-your-api-key
 
+### Option 1: Run Both Servers Concurrently(Recommended for Development)
+
 # Run both FastAPI and Streamlit concurrently
 python run_dev.py
-
 ```
 
 This will start:
@@ -65,7 +67,8 @@ customer-support-agent/
 │   └── utils.py            # Utility functions
 ├── tests/
 │   ├── test_api.py         # API endpoint tests
-│   └── test_chatbot.py     # Chatbot logic tests
+│   ├── test_chatbot.py     # Chatbot logic tests
+│   └── test_llm_client.py  # LLM client tests
 ├── main.py                 # FastAPI entrypoint
 ├── streamlit_app.py        # Streamlit frontend entrypoint
 ├── run_dev.py              # Development script (runs both servers)
@@ -83,6 +86,7 @@ pytest
 # Run specific test files
 pytest tests/test_api.py
 pytest tests/test_chatbot.py
+pytest tests/test_llm_client.py
 
 # Run with coverage
 pytest --cov=app
@@ -96,6 +100,31 @@ All configuration is centralized in `app/config.py`:
 - **Streamlit Settings**: Port
 - **Chatbot Settings**: Similarity threshold, OpenAI model
 - **System Prompt**: Bot personality and instructions
+- **Debug Mode**: Enable/disable API call logging
+- **OpenAI Pricing**: Model pricing for cost calculation
+
+### Debug Mode
+
+Enable detailed API call logging by setting the environment variable:
+
+```bash
+export DEBUG_MODE=True  # Enable logging (default)
+export DEBUG_MODE=False # Disable logging
+```
+
+When enabled, you'll see detailed logs for each OpenAI API call:
+
+```
+🤖 OpenAI API Call Details:
+💡 Model: gpt-3.5-turbo
+📝 Prompt tokens: 75
+📝 Completion tokens: 150
+📊 Total tokens: 225
+💰 Prompt cost: $0.00011
+💰 Completion cost: $0.00030
+💸 Total cost: $0.00041
+----------------------------------------
+```
 
 ## 🌐 API Endpoints
 
@@ -127,6 +156,18 @@ Health check endpoint.
 }
 ```
 
+### GET `/usage`
+Get LLM usage statistics.
+
+**Response:**
+```json
+{
+  "cache_size": 5,
+  "model": "gpt-3.5-turbo",
+  "debug_enabled": true
+}
+```
+
 ### GET `/`
 API information and available endpoints.
 
@@ -146,10 +187,12 @@ For production, consider:
 3. **CORS Configuration**: Restrict CORS origins to your domain
 4. **Load Balancing**: Use nginx or similar for the FastAPI backend
 5. **Monitoring**: Add logging and health checks
+6. **Cost Monitoring**: Use the built-in API call logging to track OpenAI costs
 
 ## 📝 Notes
 
 - No data is stored or logged
 - For local demo/testing only
 - Uses OpenAI GPT-3.5-turbo for fallback responses
-- FAQ matching uses fuzzy string matching with configurable threshold 
+- FAQ matching uses fuzzy string matching with configurable threshold
+- API call logging helps monitor OpenAI usage and costs 
