@@ -1,5 +1,9 @@
 # Thoughtful AI Customer Support Agent
 
+**Live Demo on replit:**  
+[Click here to try it out!](https://818c3569-c155-4acd-9762-45a8b388aaa3-00-23p79b5mhhad4.janeway.replit.dev)
+
+
 A simple customer support chatbot for Thoughtful AI using hardcoded Q&A and OpenAI GPT fallback.
 
 ## Features
