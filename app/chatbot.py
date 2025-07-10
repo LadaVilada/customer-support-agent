@@ -2,6 +2,8 @@ from typing import List, Dict, Tuple
 from .matcher import find_best_match
 from .llm_client import LLMClient, LLMError
 from .qa_data import qa_data
+from .utils import logger
+
 
 class Chatbot:
     """
@@ -31,4 +33,9 @@ class Chatbot:
         try:
             return self.llm_client.get_response(user_input)
         except LLMError as e:
-            return f"[LLM Error] {e}" 
+            # Log error and show fallback message
+            logger.error(f"LLMError: {e}")
+            return "Sorry, I couldn’t process your request right now."
+        except Exception as e:
+            logger.exception("Unexpected error in LLM client.")
+            return "Sorry, something went wrong with the AI service."

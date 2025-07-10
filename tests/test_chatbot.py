@@ -28,4 +28,4 @@ def test_llm_error():
             raise Exception("LLM is down!")
     chatbot = Chatbot(llm_client=ErrorLLMClient())
     response = chatbot.get_response("Unmatched question")
-    assert "LLM Error" in response 
+    assert "Sorry, something went wrong with the AI service" in response
